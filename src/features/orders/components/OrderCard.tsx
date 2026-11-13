@@ -1,6 +1,6 @@
 import { CalendarClock, User } from 'lucide-react'
 import { Card } from '../../../components/ui/Card'
-import { formatCurrency, formatDateTime } from '../format'
+import { formatCurrency, formatDateTime } from '../../../lib/format'
 import { orderStatusPresentation } from '../orderStatus'
 import type { Order } from '../types'
 

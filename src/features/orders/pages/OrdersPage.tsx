@@ -1,20 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { CakeSlice, RefreshCw, TriangleAlert } from 'lucide-react'
 import { Card } from '../../../components/ui/Card'
+import { shouldRetry } from '../../../lib/queryRetry'
 import { OrderCard } from '../components/OrderCard'
 import { OrderSkeleton } from '../components/OrderSkeleton'
 import { getOrders } from '../ordersApi'
 
-const MAX_RETRIES = 2
 const SKELETON_COUNT = 6
-
-/** Retenta só falhas transitórias (rede, timeout, 5xx); erros 4xx não melhoram ao repetir. */
-function shouldRetry(failureCount: number, error: unknown): boolean {
-  if (failureCount >= MAX_RETRIES) return false
-  if (axios.isAxiosError(error) && error.response && error.response.status < 500) return false
-  return true
-}
 
 export function OrdersPage() {
   const { data, isPending, isError, isFetching, refetch } = useQuery({

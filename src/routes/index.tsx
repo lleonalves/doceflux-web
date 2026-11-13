@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { OrdersPage } from '../features/orders/pages/OrdersPage'
+import { ProductsPage } from '../features/products/pages/ProductsPage'
 import { NotFoundPage } from '../features/shared/pages/NotFoundPage'
 import { PlaceholderPage } from '../features/shared/pages/PlaceholderPage'
 import { DashboardLayout } from '../layouts/DashboardLayout'
@@ -18,7 +19,7 @@ export function AppRoutes() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/products" element={<PlaceholderPage title="Produtos" />} />
+          <Route path="/products" element={<ProductsPage />} />
           <Route path="/customers" element={<PlaceholderPage title="Clientes" />} />
           <Route path="/finance" element={<PlaceholderPage title="Financeiro" />} />
           <Route path="/settings" element={<PlaceholderPage title="Configurações" />} />
