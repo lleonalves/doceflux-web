@@ -7,6 +7,7 @@ export interface User {
   id: string
   email: string
   role: string
+  storeId: string
   storeName: string
 }
 

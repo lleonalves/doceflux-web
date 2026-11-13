@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { AUTH_STORAGE_KEY } from '../store/useAuthStore'
+import { AUTH_STORAGE_KEY, useAuthStore } from '../store/useAuthStore'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  timeout: 15000,
 })
 
 /** Lê o token do formato persistido pelo Zustand: { state: { token } }. */
@@ -27,4 +28,16 @@ api.interceptors.request.use((config) => {
     config.headers.set('Authorization', `Bearer ${token}`)
   }
   return config
+})
+
+// O token pode estar expirado/inválido: um 401 em requisição autenticada encerra a sessão local.
+api.interceptors.response.use(undefined, (error: unknown) => {
+  if (
+    axios.isAxiosError(error) &&
+    error.response?.status === 401 &&
+    error.config?.headers.has('Authorization')
+  ) {
+    useAuthStore.getState().logout()
+  }
+  return Promise.reject(error)
 })
