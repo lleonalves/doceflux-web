@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@theme {
+  --color-rose-deep: #8c313e;
+  --color-cream: #faf2ee;
+  --color-cacao: #3c1a1e;
+  --color-rose-soft: #c96f7d;
+  --color-beige: #e8d8c8;
+  --color-sage: #71845d;
+  /* Variante mais escura do verde sálvia para texto pequeno (contraste AA sobre creme/bege). */
+  --color-sage-dark: #4f6040;
+
+  /* Aliases: mesmos valores das cores acima, em nomenclatura alternativa. */
+  --color-rosy-dark: #8c313e;
+  --color-creme: #faf2ee;
+  --color-brown-dark: #3c1a1e;
+
+  --font-display: "Fredoka", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+
+  --shadow-cozy: 4px 4px 0px 0px #3c1a1e;
+  --shadow-cozy-sm: 2px 2px 0px 0px #3c1a1e;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-cream font-sans text-cacao antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-rose-soft;
+  }
+}
