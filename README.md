@@ -1,75 +1,23 @@
-# React + TypeScript + Vite
+# 🍰 DoceFlux Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend do sistema de gestão para a confeitaria Kédoce. Uma aplicação construída para ser a interface de operação local, focada em gestão de pedidos, catálogo de produtos e fluxo de caixa, consumindo a API real em Java Spring Boot.
 
-Currently, two official plugins are available:
+## 🛠️ Stack Tecnológica
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O projeto foi estruturado com foco em escalabilidade, arquitetura defensiva e tipagem estrita:
+- **React 18** + **Vite**
+- **TypeScript** (Interfaces mapeadas estritamente a partir do Swagger/OpenAPI do backend)
+- **Tailwind CSS v4** (Variáveis CSS customizadas e Design System próprio)
+- **TanStack React Query** (Gestão inteligente de estado do servidor, cache e refetch)
+- **Axios** (Comunicação HTTP com interceptação de JWT)
 
-## React Compiler
+## 🎨 Design System: "Cozy"
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+A interface não utiliza bibliotecas de componentes genéricas. A identidade visual foi desenhada do zero com a estética "Cozy", caracterizada por:
+- Paleta de cores acolhedora (creme, rosê escuro, marrom).
+- Sombras 2D sólidas (`--shadow-cozy`).
+- Bordas espessas e cantos arredondados, evitando o aspecto frio de sistemas ERP tradicionais.
 
-## Expanding the ESLint configuration
+## 📂 Arquitetura (Feature-Sliced Design)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+O código está organizado por módulos de negócio (Features), evitando o acoplamento excessivo:
