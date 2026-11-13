@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
+import { OrdersPage } from '../features/orders/pages/OrdersPage'
 import { NotFoundPage } from '../features/shared/pages/NotFoundPage'
 import { PlaceholderPage } from '../features/shared/pages/PlaceholderPage'
 import { DashboardLayout } from '../layouts/DashboardLayout'
@@ -16,7 +17,7 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/orders" element={<PlaceholderPage title="Pedidos" />} />
+          <Route path="/orders" element={<OrdersPage />} />
           <Route path="/products" element={<PlaceholderPage title="Produtos" />} />
           <Route path="/customers" element={<PlaceholderPage title="Clientes" />} />
           <Route path="/finance" element={<PlaceholderPage title="Financeiro" />} />
