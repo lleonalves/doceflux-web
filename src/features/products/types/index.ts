@@ -12,3 +12,11 @@ export interface Product {
 }
 
 export type ProductStatusFilter = 'all' | 'active' | 'inactive'
+
+/** Payload de POST /api/products: dados do formulário (sem id nem tenant). */
+export interface CreateProductPayload {
+  name: string
+  price: number
+  stockQuantity: number
+  imageUrl?: string
+}

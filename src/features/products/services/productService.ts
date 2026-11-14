@@ -1,5 +1,5 @@
 import { api } from '../../../config/api'
-import type { Product } from '../types'
+import type { CreateProductPayload, Product } from '../types'
 
 /**
  * O backend devolve a lista completa (sem paginação). O filtro opcional `?active=`
@@ -7,5 +7,10 @@ import type { Product } from '../types'
  */
 export async function getProducts(): Promise<Product[]> {
   const { data } = await api.get<Product[]>('/api/products')
+  return data
+}
+
+export async function createProduct(product: CreateProductPayload): Promise<Product> {
+  const { data } = await api.post<Product>('/api/products', product)
   return data
 }
