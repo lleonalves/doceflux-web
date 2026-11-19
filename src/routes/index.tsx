@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
+import CustomersPage from '../features/customers/pages/CustomersPage'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { OrdersPage } from '../features/orders/pages/OrdersPage'
 import ProductsPage from '../features/products/pages/ProductsPage'
@@ -20,7 +21,7 @@ export function AppRoutes() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/customers" element={<PlaceholderPage title="Clientes" />} />
+          <Route path="/customers" element={<CustomersPage />} />
           <Route path="/finance" element={<PlaceholderPage title="Financeiro" />} />
           <Route path="/settings" element={<PlaceholderPage title="Configurações" />} />
         </Route>
