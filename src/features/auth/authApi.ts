@@ -27,8 +27,16 @@ export interface LoginResult {
   user: User
 }
 
-export async function login(credentials: LoginCredentials): Promise<LoginResult> {
-  const { data } = await api.post<LoginResponse>('/api/auth/login', credentials)
+export interface RegisterPayload {
+  storeName: string
+  mainManager: string
+  responsibleManager: string
+  companyStartDate: string
+  email: string
+  password: string
+}
+
+function toLoginResult(data: LoginResponse): LoginResult {
   return {
     token: data.accessToken,
     user: {
@@ -39,6 +47,26 @@ export async function login(credentials: LoginCredentials): Promise<LoginResult>
       storeName: data.storeName,
     },
   }
+}
+
+export async function login(credentials: LoginCredentials): Promise<LoginResult> {
+  const { data } = await api.post<LoginResponse>('/api/auth/login', credentials)
+  return toLoginResult(data)
+}
+
+/** POST /api/auth/register devolve o mesmo AuthResponse do login. */
+export async function register(payload: RegisterPayload): Promise<LoginResult> {
+  const { data } = await api.post<LoginResponse>('/api/auth/register', payload)
+  return toLoginResult(data)
+}
+
+export function getRegisterErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    if (!error.response) return 'Não foi possível conectar ao servidor.'
+    const detail = error.response.data?.detail
+    if (error.response.status === 400 && typeof detail === 'string') return detail
+  }
+  return 'Não foi possível criar a conta. Tente novamente.'
 }
 
 /** Valida a sessão atual no backend (GET /api/auth/me). */

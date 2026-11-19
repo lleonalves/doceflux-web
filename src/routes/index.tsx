@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from '../features/auth/LoginPage'
+import { RegisterPage } from '../features/auth/RegisterPage'
 import CustomersPage from '../features/customers/pages/CustomersPage'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { OrdersPage } from '../features/orders/pages/OrdersPage'
@@ -14,6 +15,7 @@ export function AppRoutes() {
     <Routes>
       <Route element={<PublicOnly />}>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Route>
 
       <Route element={<RequireAuth />}>

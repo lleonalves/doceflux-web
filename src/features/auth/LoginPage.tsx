@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useState, type SubmitEventHandler } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../store/useAuthStore'
 import { getLoginErrorMessage, login } from './authApi'
 
@@ -74,6 +75,13 @@ export function LoginPage() {
         >
           {mutation.isPending ? 'Entrando...' : 'Entrar'}
         </button>
+
+        <p className="text-center text-sm text-cacao">
+          Ainda não tem conta?{' '}
+          <Link to="/register" className="font-bold text-rose-deep underline">
+            Cadastre sua confeitaria
+          </Link>
+        </p>
       </form>
     </main>
   )
