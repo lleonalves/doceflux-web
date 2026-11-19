@@ -5,6 +5,7 @@ export interface Product {
   /** Coluna TEXT sem NOT NULL no backend: pode vir nulo. */
   description: string | null
   price: number
+  stockQuantity: number
   active: boolean
   /** Instant em ISO-8601 (UTC). */
   createdAt: string
@@ -18,5 +19,8 @@ export interface CreateProductPayload {
   name: string
   price: number
   stockQuantity: number
-  imageUrl?: string
+  description?: string
 }
+
+/** Payload de PUT /api/products/{id}: mesmo contrato do POST. */
+export type UpdateProductPayload = CreateProductPayload

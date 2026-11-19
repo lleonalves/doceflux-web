@@ -7,8 +7,8 @@ import { ProductCard } from '../components/ProductCard'
 import { ProductFilters } from '../components/ProductFilters'
 import { ProductSkeleton } from '../components/ProductSkeleton'
 import { countActive, filterProducts } from '../productFilters'
-import { createProduct, getProducts } from '../services/productService'
-import type { ProductStatusFilter } from '../types'
+import { createProduct, getProducts, toggleProductActive, updateProduct } from '../services/productService'
+import type { Product, ProductStatusFilter, UpdateProductPayload } from '../types'
 import { ProductForm } from '../components/ProductForm'
 
 const SKELETON_COUNT = 8
@@ -40,13 +40,45 @@ export default function ProductsPage() {
   const [status, setStatus] = useState<ProductStatusFilter>('all')
   const [isFormOpen, setIsFormOpen] = useState(false)
 
-  const { mutate } = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-      setIsFormOpen(false)
-    },
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+
+  const closeForm = (): void => {
+    setIsFormOpen(false)
+    setEditingProduct(null)
+    createMutation.reset()
+    updateMutation.reset()
+  }
+
+  const openCreate = (): void => {
+    closeForm()
+    setIsFormOpen(true)
+  }
+
+  const openEdit = (product: Product): void => {
+    closeForm()
+    setEditingProduct(product)
+    setIsFormOpen(true)
+  }
+
+  const onSaved = (): void => {
+    queryClient.invalidateQueries({ queryKey: ['products'] })
+    closeForm()
+  }
+
+  const createMutation = useMutation({ mutationFn: createProduct, onSuccess: onSaved })
+  const updateMutation = useMutation({
+    mutationFn: (values: UpdateProductPayload) => updateProduct(editingProduct!.id, values),
+    onSuccess: onSaved,
   })
+  const toggleMutation = useMutation({
+    mutationFn: (product: Product) => toggleProductActive(product.id, !product.active),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
+  })
+  const activeMutation = editingProduct ? updateMutation : createMutation
+  const formError = activeMutation.isError
+    ? (activeMutation.error as { response?: { data?: { message?: string } } }).response?.data?.message ??
+      'Não foi possível salvar o produto. Tente novamente.'
+    : null
 
   const visibleProducts = useMemo(
       () => (data ? filterProducts(data, search, status) : []),
@@ -71,7 +103,7 @@ export default function ProductsPage() {
 
           <button
               type="button"
-              onClick={() => setIsFormOpen(true)}
+              onClick={openCreate}
               className="inline-flex min-h-11 items-center gap-2 rounded-xl border-2 border-cacao bg-rose-deep px-5 font-bold text-cream shadow-cozy hover:bg-[#7a2834] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
           >
             <Plus size={20} />
@@ -82,10 +114,28 @@ export default function ProductsPage() {
         {isFormOpen && (
             <div className="fixed inset-0 bg-cacao/40 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
               <div className="bg-cream border-2 border-cacao shadow-cozy rounded-2xl p-6 w-full max-w-md">
-                <h2 className="text-2xl text-cacao mb-4 font-display">Cadastrar Novo Doce</h2>
+                <h2 className="text-2xl text-cacao mb-4 font-display">
+                  {editingProduct ? 'Editar Doce' : 'Cadastrar Novo Doce'}
+                </h2>
                 <ProductForm
-                    onSubmit={(formData) => mutate(formData)}
-                    onCancel={() => setIsFormOpen(false)}
+                    defaultValues={
+                      editingProduct
+                        ? {
+                            name: editingProduct.name,
+                            price: editingProduct.price,
+                            stockQuantity: editingProduct.stockQuantity,
+                            description: editingProduct.description ?? '',
+                          }
+                        : undefined
+                    }
+                    onSubmit={(formData) =>
+                      editingProduct
+                        ? updateMutation.mutate(formData)
+                        : createMutation.mutate(formData)
+                    }
+                    onCancel={closeForm}
+                    isPending={activeMutation.isPending}
+                    errorMessage={formError}
                 />
               </div>
             </div>
@@ -162,7 +212,10 @@ export default function ProductsPage() {
         {visibleProducts.length > 0 && (
             <div className={gridClass}>
               {visibleProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} onEdit={openEdit}
+                      onToggleActive={(p) => toggleMutation.mutate(p)}
+                      isToggling={toggleMutation.isPending && toggleMutation.variables?.id === product.id}
+                  />
               ))}
             </div>
         )}
