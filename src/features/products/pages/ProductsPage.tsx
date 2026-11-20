@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { CakeSlice, CheckCircle2, Package, SearchX, TriangleAlert, Plus, type LucideIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Card } from '../../../components/ui/Card'
 import { shouldRetry } from '../../../lib/queryRetry'
 import { ProductCard } from '../components/ProductCard'
@@ -38,7 +39,21 @@ export default function ProductsPage() {
 
   const [search, setSearch] = useState<string>('')
   const [status, setStatus] = useState<ProductStatusFilter>('all')
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isFormOpen, setIsFormOpen] = useState(() => searchParams.get('new') === 'true')
+
+  // Atalhos da Home (?new=true): abrem o modal uma vez e limpam o parâmetro.
+  useEffect(() => {
+    if (searchParams.has('new')) {
+      setSearchParams(
+        (params) => {
+          params.delete('new')
+          return params
+        },
+        { replace: true },
+      )
+    }
+  }, [searchParams, setSearchParams])
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 

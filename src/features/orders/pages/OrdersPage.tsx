@@ -11,7 +11,8 @@ import {
   TriangleAlert,
   X,
 } from 'lucide-react'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Card } from '../../../components/ui/Card'
 import { shouldRetry } from '../../../lib/queryRetry'
 import { getCustomers } from '../../customers/services/customerService'
@@ -53,10 +54,27 @@ export function OrdersPage() {
   const customersQuery = useQuery({ queryKey: ['customers'], queryFn: getCustomers, retry: shouldRetry })
   const productsQuery = useQuery({ queryKey: ['products'], queryFn: getProducts, retry: shouldRetry })
 
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isFormOpen, setIsFormOpen] = useState(() => searchParams.get('new') === 'true')
   const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(() => {
+    const status = searchParams.get('status')
+    return status && status in orderStatusPresentation ? (status as OrderStatus) : 'all'
+  })
   const [statusError, setStatusError] = useState<string | null>(null)
+
+  // Atalhos da Home (?new=true): abrem o modal uma vez e limpam o parâmetro.
+  useEffect(() => {
+    if (searchParams.has('new')) {
+      setSearchParams(
+        (params) => {
+          params.delete('new')
+          return params
+        },
+        { replace: true },
+      )
+    }
+  }, [searchParams, setSearchParams])
 
   const invalidate = (): void => {
     void queryClient.invalidateQueries({ queryKey: ['orders'] })
