@@ -73,7 +73,12 @@ export function OrdersPage() {
   const statusMutation = useMutation({
     mutationFn: ({ order, status }: { order: Order; status: OrderStatus }) => changeOrderStatus(order.id, status),
     onMutate: () => setStatusError(null),
-    onSuccess: invalidate,
+    onSuccess: () => {
+      invalidate()
+      void queryClient.invalidateQueries({ queryKey: ['transactions'] })
+      void queryClient.invalidateQueries({ queryKey: ['cash-flow'] })
+      void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
     onError: (error) => setStatusError(getApiErrorMessage(error, 'Não foi possível alterar o status do pedido.')),
   })
 
