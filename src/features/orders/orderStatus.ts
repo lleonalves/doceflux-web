@@ -13,3 +13,18 @@ export const orderStatusPresentation: Record<OrderStatus, StatusPresentation> = 
   COMPLETED: { label: 'Concluído', badgeClass: 'bg-sage-dark text-cream' },
   CANCELLED: { label: 'Cancelado', badgeClass: 'bg-cacao text-cream' },
 }
+
+/** Espelha OrderStatus.canTransitionTo do backend. */
+export const nextStatuses: Record<OrderStatus, OrderStatus[]> = {
+  PENDING: ['IN_PRODUCTION', 'CANCELLED'],
+  IN_PRODUCTION: ['COMPLETED', 'CANCELLED'],
+  COMPLETED: [],
+  CANCELLED: [],
+}
+
+export const statusActionLabel: Record<OrderStatus, string> = {
+  PENDING: 'Reabrir',
+  IN_PRODUCTION: 'Iniciar produção',
+  COMPLETED: 'Concluir',
+  CANCELLED: 'Cancelar',
+}
