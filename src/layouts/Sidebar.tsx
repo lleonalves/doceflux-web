@@ -1,4 +1,4 @@
-import { Cake, Cookie, Wheat, X } from 'lucide-react'
+import { Cookie, Wheat, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
 import { LogoutButton } from './LogoutButton'
@@ -43,11 +43,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           aria-hidden="true"
           className="absolute -top-3 right-4 rounded-full border-2 border-cacao bg-rose-soft p-0.5 text-cacao"
         />
-        <p className="flex items-center gap-1.5 text-xs font-extrabold tracking-widest text-rose-deep uppercase">
-          <Cake size={14} strokeWidth={2.5} aria-hidden="true" />
-          DoceFlux
-        </p>
-        <p className="mt-1 font-display text-xl leading-tight font-semibold break-words">
+        <p
+          title={storeName}
+          className="line-clamp-2 text-center font-display text-xl leading-tight font-bold break-words text-cacao"
+        >
           {storeName ?? 'Minha confeitaria'}
         </p>
       </div>

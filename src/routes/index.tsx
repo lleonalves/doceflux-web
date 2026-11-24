@@ -7,7 +7,7 @@ import { FinancePage } from '../features/finance/pages/FinancePage'
 import { OrdersPage } from '../features/orders/pages/OrdersPage'
 import ProductsPage from '../features/products/pages/ProductsPage'
 import { NotFoundPage } from '../features/shared/pages/NotFoundPage'
-import { PlaceholderPage } from '../features/shared/pages/PlaceholderPage'
+import { SettingsPage } from '../features/settings/pages/SettingsPage'
 import { DashboardLayout } from '../layouts/DashboardLayout'
 import { PublicOnly, RequireAuth } from './guards'
 
@@ -26,7 +26,7 @@ export function AppRoutes() {
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/finance" element={<FinancePage />} />
-          <Route path="/settings" element={<PlaceholderPage title="Configurações" />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Route>
 
