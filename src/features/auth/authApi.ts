@@ -34,6 +34,7 @@ export interface RegisterPayload {
   companyStartDate: string
   email: string
   password: string
+  inviteCode?: string
 }
 
 function toLoginResult(data: LoginResponse): LoginResult {
@@ -64,7 +65,7 @@ export function getRegisterErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     if (!error.response) return 'Não foi possível conectar ao servidor.'
     const detail = error.response.data?.detail
-    if (error.response.status === 400 && typeof detail === 'string') return detail
+    if ([400, 403].includes(error.response.status) && typeof detail === 'string') return detail
   }
   return 'Não foi possível criar a conta. Tente novamente.'
 }

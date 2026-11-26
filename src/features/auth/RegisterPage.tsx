@@ -18,6 +18,7 @@ const registerSchema = z.object({
     .refine((value) => value <= today(), 'A data não pode ser futura'),
   email: z.email('E-mail inválido').max(150, 'Máximo de 150 caracteres'),
   password: z.string().min(6, 'Mínimo de 6 caracteres').max(100, 'Máximo de 100 caracteres'),
+  inviteCode: z.string().trim(),
 })
 
 type RegisterFormValues = z.infer<typeof registerSchema>
@@ -39,13 +40,20 @@ export function RegisterPage() {
     onSuccess: ({ token, user }) => setAuth(token, user), // PublicOnly redireciona para a área logada
   })
 
-  const fields: { name: keyof RegisterFormValues; label: string; type?: string; autoComplete?: string }[] = [
+  const fields: {
+    name: keyof RegisterFormValues
+    label: string
+    type?: string
+    autoComplete?: string
+    placeholder?: string
+  }[] = [
     { name: 'storeName', label: 'Nome da Confeitaria' },
     { name: 'mainManager', label: 'Nome do Responsável', autoComplete: 'name' },
     { name: 'responsibleManager', label: 'Gestor Responsável' },
     { name: 'companyStartDate', label: 'Início da empresa', type: 'date' },
     { name: 'email', label: 'E-mail', type: 'email', autoComplete: 'email' },
     { name: 'password', label: 'Senha', type: 'password', autoComplete: 'new-password' },
+    { name: 'inviteCode', label: 'Código de convite', autoComplete: 'off', placeholder: 'Opcional em ambiente de teste' },
   ]
 
   return (
@@ -53,20 +61,14 @@ export function RegisterPage() {
       <form
         onSubmit={handleSubmit((values) => {
           if (mutation.isPending) return
-          mutation.mutate(values)
+          mutation.mutate({ ...values, inviteCode: values.inviteCode || undefined })
         })}
         noValidate
         className="w-full max-w-sm space-y-4 rounded-2xl border-2 border-cacao bg-beige p-6 shadow-cozy"
       >
         <h1 className="text-3xl font-bold text-rose-deep">Cadastre sua confeitaria</h1>
 
-        {mutation.isError && (
-          <p role="alert" className="rounded-xl border-2 border-cacao bg-cream p-3 text-sm font-bold text-rose-deep">
-            {getRegisterErrorMessage(mutation.error)}
-          </p>
-        )}
-
-        {fields.map(({ name, label, type = 'text', autoComplete }) => (
+        {fields.map(({ name, label, type = 'text', autoComplete, placeholder }) => (
           <div key={name} className="space-y-1">
             <label htmlFor={name} className={labelClass}>
               {label}
@@ -75,6 +77,7 @@ export function RegisterPage() {
               id={name}
               type={type}
               autoComplete={autoComplete}
+              placeholder={placeholder}
               max={type === 'date' ? today() : undefined}
               className={inputClass}
               {...register(name)}
@@ -86,6 +89,12 @@ export function RegisterPage() {
             )}
           </div>
         ))}
+
+        {mutation.isError && (
+          <p role="alert" className="rounded-xl border-2 border-cacao bg-cream p-3 text-sm font-bold text-rose-deep">
+            {getRegisterErrorMessage(mutation.error)}
+          </p>
+        )}
 
         <button
           type="submit"
